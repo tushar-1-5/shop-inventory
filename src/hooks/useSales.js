@@ -54,10 +54,12 @@ export function useSales() {
 
   async function logSale({ product_id, quantity, selling_price }) {
     const total = quantity * selling_price;
+    const { data: { user } } = await supabase.auth.getUser();
+    const userId = user?.id;
 
     const { data, error: err } = await supabase
       .from('sales')
-      .insert({ product_id, quantity, unit_price: selling_price, total })
+      .insert({ product_id, quantity, unit_price: selling_price, total, sold_by: userId })
       .select('*, products(name, brand_name), profiles(display_name)')
       .single();
 
@@ -77,6 +79,7 @@ export function useSales() {
       entity_id: product_id,
       entity_name: productName,
       changes: { quantity, unit_price: selling_price, total },
+      performed_by: userId,
     });
 
     return { data, error: null };
