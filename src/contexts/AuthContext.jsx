@@ -18,16 +18,24 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user) {
-        fetchProfile(session.user.id);
+        setUser(session.user);
+        await fetchProfile(session.user.id);
+      } else {
+        const { data: { session: refreshed } } = await supabase.auth.refreshSession();
+        if (refreshed?.user) {
+          setUser(refreshed.user);
+          await fetchProfile(refreshed.user.id);
+        } else {
+          setUser(null);
+        }
       }
       setLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
         setUser(session?.user ?? null);
         if (session?.user) {
           await fetchProfile(session.user.id);
