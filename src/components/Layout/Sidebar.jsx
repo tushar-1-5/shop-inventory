@@ -4,6 +4,7 @@ import styles from './Sidebar.module.css';
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: '&#x2302;' },
+  { to: '/sales', label: 'Sales', icon: '&#x1F6D2;' },
   { to: '/products', label: 'Products', icon: '&#x25A3;' },
   { to: '/categories', label: 'Categories', icon: '&#x2630;' },
   { to: '/activity', label: 'Activity Log', icon: '&#x231A;' },

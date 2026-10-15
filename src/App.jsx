@@ -10,6 +10,7 @@ import DashboardPage from './pages/DashboardPage';
 import ProductsPage from './pages/ProductsPage';
 import ProductFormPage from './pages/ProductFormPage';
 import CategoriesPage from './pages/CategoriesPage';
+import SalesPage from './pages/SalesPage';
 import ActivityLogPage from './pages/ActivityLogPage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -29,6 +30,7 @@ export default function App() {
                   <Layout>
                     <Routes>
                       <Route path="/" element={<DashboardPage />} />
+                      <Route path="/sales" element={<SalesPage />} />
                       <Route path="/products" element={<ProductsPage />} />
                       <Route path="/products/new" element={<ProductFormPage />} />
                       <Route path="/products/:id/edit" element={<ProductFormPage />} />

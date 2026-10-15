@@ -4,6 +4,14 @@
   gap: var(--spacing-lg);
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
 .heading {
   font-size: var(--font-size-2xl);
   font-weight: 700;
@@ -11,7 +19,7 @@
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-md);
 }
 
@@ -21,7 +29,7 @@
   gap: var(--spacing-md);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .stats {
     grid-template-columns: repeat(2, 1fr);
   }
