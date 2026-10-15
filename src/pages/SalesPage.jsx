@@ -58,7 +58,7 @@ export default function SalesPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.heading}>Sales</h1>
-        <Button onClick={() => setSaleModalOpen(true)}>+ Log Sale</Button>
+        <Button size="lg" onClick={() => setSaleModalOpen(true)}>+ Log Sale</Button>
       </div>
 
       <div className={styles.filters}>

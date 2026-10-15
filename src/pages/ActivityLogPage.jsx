@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useActivityLog } from '../hooks/useActivityLog';
 import { useRealtimeSubscription } from '../hooks/useRealtimeSubscription';
 import { supabase } from '../supabaseClient';
-import { formatRelativeTime, formatDate, formatChangeDescription, formatQuantityChange } from '../utils/formatters';
-import { ACTION_LABELS, ACTION_TYPES } from '../utils/constants';
+import { formatRelativeTime, formatDate, formatActivityDescription } from '../utils/formatters';
+import { ACTION_LABELS } from '../utils/constants';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
@@ -57,19 +57,6 @@ export default function ActivityLogPage() {
     const cleared = { startDate: '', endDate: '', action: '', entityType: '', userId: '' };
     setFilters(cleared);
     fetchActivities(cleared, true);
-  }
-
-  function renderChangeDetails(activity) {
-    if (activity.action === ACTION_TYPES.QUANTITY_CHANGED) {
-      return formatQuantityChange(activity.changes);
-    }
-    if (activity.changes && activity.action !== ACTION_TYPES.PRODUCT_CREATED) {
-      return formatChangeDescription(activity.action, activity.changes);
-    }
-    if (activity.action === ACTION_TYPES.PRODUCT_CREATED && activity.changes) {
-      return `Qty: ${activity.changes.quantity || 0}`;
-    }
-    return '';
   }
 
   const userOptions = users.map(u => ({ value: u.id, label: u.display_name }));
@@ -134,27 +121,21 @@ export default function ActivityLogPage() {
       ) : (
         <>
           <div className={styles.list}>
-            {activities.map(a => {
-              const details = renderChangeDetails(a);
-              return (
+            {activities.map(a => (
                 <div key={a.id} className={styles.item}>
                   <div className={styles.avatar}>
                     {a.profiles?.display_name?.charAt(0)?.toUpperCase() || '?'}
                   </div>
                   <div className={styles.content}>
                     <p className={styles.action}>
-                      <strong>{a.profiles?.display_name || 'Unknown'}</strong>
-                      {' '}{ACTION_LABELS[a.action]?.toLowerCase() || a.action}
-                      {' '}<span className={styles.entity}>{a.entity_name}</span>
+                      {formatActivityDescription(a)}
                     </p>
-                    {details && <p className={styles.changes}>{details}</p>}
                     <time className={styles.time} title={formatDate(a.performed_at)}>
                       {formatRelativeTime(a.performed_at)}
                     </time>
                   </div>
                 </div>
-              );
-            })}
+              ))}
           </div>
           {hasMore && (
             <div className={styles.loadMore}>

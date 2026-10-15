@@ -70,6 +70,15 @@ export function useSales() {
 
     if (updateErr) return { data, error: updateErr };
 
+    const productName = data.products?.name || '';
+    await supabase.from('activity_log').insert({
+      action: 'sale_logged',
+      entity_type: 'product',
+      entity_id: product_id,
+      entity_name: productName,
+      changes: { quantity, unit_price: selling_price, total },
+    });
+
     return { data, error: null };
   }
 

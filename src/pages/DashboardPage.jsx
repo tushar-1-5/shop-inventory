@@ -45,7 +45,7 @@ export default function DashboardPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.heading}>Dashboard</h1>
-        <Button onClick={() => setSaleModalOpen(true)}>+ Log Sale</Button>
+        <Button size="lg" onClick={() => setSaleModalOpen(true)}>+ Log Sale</Button>
       </div>
 
       <div className={styles.stats}>

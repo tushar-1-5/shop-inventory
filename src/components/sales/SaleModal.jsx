@@ -9,20 +9,28 @@ import styles from './SaleModal.module.css';
 export default function SaleModal({ isOpen, onClose, products, onSubmit }) {
   const [productId, setProductId] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [salePrice, setSalePrice] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  const selectedProduct = products.find(p => p.id === productId);
+  const total = selectedProduct ? quantity * salePrice : 0;
+  const maxQty = selectedProduct ? selectedProduct.quantity : 0;
 
   useEffect(() => {
     if (isOpen) {
       setProductId('');
       setQuantity(1);
+      setSalePrice(0);
       setError('');
     }
   }, [isOpen]);
 
-  const selectedProduct = products.find(p => p.id === productId);
-  const total = selectedProduct ? quantity * Number(selectedProduct.selling_price) : 0;
-  const maxQty = selectedProduct ? selectedProduct.quantity : 0;
+  useEffect(() => {
+    if (selectedProduct) {
+      setSalePrice(Number(selectedProduct.selling_price));
+    }
+  }, [productId]);
 
   const productOptions = products
     .filter(p => p.quantity > 0)
@@ -46,12 +54,16 @@ export default function SaleModal({ isOpen, onClose, products, onSubmit }) {
       setError(`Only ${maxQty} in stock`);
       return;
     }
+    if (salePrice < 0) {
+      setError('Price cannot be negative');
+      return;
+    }
 
     setSubmitting(true);
     await onSubmit({
       product_id: productId,
       quantity,
-      selling_price: Number(selectedProduct.selling_price),
+      selling_price: salePrice,
     });
     setSubmitting(false);
   }
@@ -70,7 +82,7 @@ export default function SaleModal({ isOpen, onClose, products, onSubmit }) {
         {selectedProduct && (
           <>
             <div className={styles.productInfo}>
-              <span>Price: {formatCurrency(selectedProduct.selling_price)}</span>
+              <span>Default price: {formatCurrency(selectedProduct.selling_price)}</span>
               <span>In stock: {selectedProduct.quantity}</span>
             </div>
 
@@ -83,6 +95,15 @@ export default function SaleModal({ isOpen, onClose, products, onSubmit }) {
               onChange={e => { setQuantity(Number(e.target.value)); setError(''); }}
             />
 
+            <Input
+              label="Sale Price per unit (₹)"
+              type="number"
+              min="0"
+              step="0.01"
+              value={salePrice}
+              onChange={e => { setSalePrice(Number(e.target.value)); setError(''); }}
+            />
+
             <div className={styles.total}>
               Total: <strong>{formatCurrency(total)}</strong>
             </div>
@@ -92,7 +113,7 @@ export default function SaleModal({ isOpen, onClose, products, onSubmit }) {
         {error && <p className={styles.error}>{error}</p>}
 
         <ButtonGroup>
-          <Button type="submit" disabled={submitting || !productId}>
+          <Button type="submit" size="lg" disabled={submitting || !productId}>
             {submitting ? 'Logging...' : 'Log Sale'}
           </Button>
           <Button variant="secondary" onClick={onClose}>Cancel</Button>

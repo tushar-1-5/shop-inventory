@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../supabaseClient';
 import { useRealtimeSubscription } from '../../hooks/useRealtimeSubscription';
-import { formatRelativeTime } from '../../utils/formatters';
-import { ACTION_LABELS } from '../../utils/constants';
+import { formatRelativeTime, formatActivityDescription } from '../../utils/formatters';
 import styles from './RecentActivity.module.css';
 
 export default function RecentActivity() {
@@ -41,9 +40,7 @@ export default function RecentActivity() {
               </div>
               <div className={styles.content}>
                 <p className={styles.description}>
-                  <strong>{a.profiles?.display_name || 'Unknown'}</strong>
-                  {' '}{ACTION_LABELS[a.action]?.toLowerCase() || a.action}
-                  {' '}<span className={styles.entity}>{a.entity_name}</span>
+                  {formatActivityDescription(a)}
                 </p>
                 <time className={styles.time} title={a.performed_at}>
                   {formatRelativeTime(a.performed_at)}

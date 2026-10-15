@@ -6,6 +6,7 @@ export const ACTION_TYPES = {
   CATEGORY_CREATED: 'category_created',
   CATEGORY_UPDATED: 'category_updated',
   CATEGORY_DELETED: 'category_deleted',
+  SALE_LOGGED: 'sale_logged',
 };
 
 export const ACTION_LABELS = {
@@ -16,6 +17,7 @@ export const ACTION_LABELS = {
   category_created: 'Category Created',
   category_updated: 'Category Updated',
   category_deleted: 'Category Deleted',
+  sale_logged: 'Sale Logged',
 };
 
 export const ENTITY_TYPES = {
